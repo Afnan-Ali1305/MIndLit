@@ -1,3 +1,4 @@
+/* Performance-Friendly Scrollbar Customization */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -12,9 +13,15 @@
     background: #ef4444; 
 }
 
+/* Base Movie Card Styling without performance-heavy scaling elements */
 .movie-card img {
-    transition: transform 0.3s ease;
+    will-change: auto;
 }
-.movie-card:hover img {
-    transform: scale(1.05);
+
+/* Custom Ad Container Wrapper to avoid layout shifts */
+.bg-gray-855 {
+    background-color: #1f2937;
+}
+.bg-gray-850 {
+    background-color: #111827;
 }
