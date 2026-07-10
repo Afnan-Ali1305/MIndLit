@@ -1,4 +1,6 @@
-// Movie Data List
+// ==========================================
+// 1. MOVIE DATA LIST
+// ==========================================
 const moviesList = [
     { id: 1, title: "Iron Man", thumbnail: "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=500&q=80", videoUrl: "https://www.youtube.com/embed/8hP9D6kZseM" },
     { id: 2, title: "Avatar: The Way of Water", thumbnail: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500&q=80", videoUrl: "https://www.youtube.com/embed/d9MyW72ELq0" },
@@ -12,7 +14,9 @@ let currentPage = 1;
 const itemsPerPage = 12; 
 let filteredMovies = [...moviesList];
 
-// --- INDEX PAGE LOGIC ---
+// ==========================================
+// 2. INDEX PAGE LOGIC
+// ==========================================
 function initIndexPage() {
     const moviesGrid = document.getElementById('movies-grid');
     const searchInput = document.getElementById('search-input');
@@ -45,7 +49,6 @@ function initIndexPage() {
                 </div>
             `;
             
-            // Foreground Navigation: Direct link without background script pop-ups
             card.addEventListener('click', () => {
                 window.location.href = `player.html?id=${movie.id}`;
             });
@@ -107,7 +110,9 @@ function initIndexPage() {
     renderMovies();
 }
 
-// --- PLAYER PAGE LOGIC ---
+// ==========================================
+// 3. PLAYER PAGE LOGIC (Iframe Compatible)
+// ==========================================
 function initPlayerPage() {
     const videoPlayer = document.getElementById('video-player');
     const playerMovieTitle = document.getElementById('player-movie-title');
@@ -125,3 +130,43 @@ function initPlayerPage() {
         videoPlayer.style.display = "none";
     }
 }
+
+// ==========================================
+// 4. AUTOMATIC LANDSCAPE ON FULLSCREEN
+// ==========================================
+function handleFullscreenOrientation() {
+    // Check if fullscreen is active (works for document as well as inside iframe elements)
+    const isFullscreen = document.fullscreenElement || 
+                         document.webkitFullscreenElement || 
+                         document.mozFullScreenElement || 
+                         document.msFullscreenElement;
+
+    if (isFullscreen) {
+        // Fullscreen active -> Lock to landscape
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch((err) => {
+                console.log("Orientation lock failed/not supported: ", err);
+            });
+        }
+    } else {
+        // Fullscreen exit -> Unlock orientation
+        if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+        }
+    }
+}
+
+// Global Event Listeners for Fullscreen Changes (All Browsers Supported)
+document.addEventListener('fullscreenchange', handleFullscreenOrientation);
+document.addEventListener('webkitfullscreenchange', handleFullscreenOrientation);
+document.addEventListener('mozfullscreenchange', handleFullscreenOrientation);
+document.addEventListener('MSFullscreenChange', handleFullscreenOrientation);
+
+// Iframe Focus Workaround: It handles landscape properly if inside-iframe buttons are used
+window.addEventListener('blur', () => {
+    setTimeout(() => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+            handleFullscreenOrientation();
+        }
+    }, 400);
+});
