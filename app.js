@@ -140,6 +140,29 @@ function initPlayerPage() {
         videoPlayer.src = movie.videoUrl;
         playerMovieTitle.textContent = movie.title;
         document.title = `${movie.title} - StreamVerse`;
+        // Setup fullscreen button and wrapper behavior for better mobile experience
+        const wrapper = document.querySelector('.video-wrapper');
+        const fsBtn = document.getElementById('enter-fullscreen-btn');
+
+        if (fsBtn && wrapper) {
+            fsBtn.addEventListener('click', async () => {
+                try {
+                    if (document.fullscreenElement) {
+                        await document.exitFullscreen();
+                    } else {
+                        await wrapper.requestFullscreen();
+                    }
+                } catch (err) {
+                    console.error('Fullscreen request failed', err);
+                }
+            });
+
+            // Mirror fullscreen state with a class to apply styles
+            document.addEventListener('fullscreenchange', () => {
+                const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+                wrapper.classList.toggle('fullscreen', isFs);
+            });
+        }
     } else if (playerMovieTitle && videoPlayer) {
         playerMovieTitle.textContent = "Movie Not Found";
         videoPlayer.style.display = "none";

@@ -48,8 +48,12 @@
 
         <div class="space-y-4 w-full">
             <!-- Video Player Window -->
-            <div class="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-2xl">
-                <iframe id="video-player" class="w-full h-full" src="" frameborder="0" allowfullscreen></iframe>
+            <div class="aspect-video w-full bg-black rounded-xl overflow-hidden shadow-2xl video-wrapper">
+                <iframe id="video-player" class="w-full h-full" src="" frameborder="0" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+                <!-- Fullscreen / orientation control for mobile -->
+                <button id="enter-fullscreen-btn" aria-label="Enter fullscreen" title="Enter fullscreen" class="enter-fullscreen-btn">
+                    ⤢
+                </button>
             </div>
             
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-1">
