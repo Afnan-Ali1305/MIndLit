@@ -7,8 +7,7 @@ const moviesList = [
     { id: 2, title: "Chhota Bheem & Krishna In Patliputra City Of Dead ", thumbnail: "thumbnails/2.webp", videoUrl: "https://drive.google.com/file/d/1vBya42znalQuwvPdjaaj8xwtyiDm-g7p/preview" },
     { id: 3, title: "Chhota Bheem And Krishna In Mayanagari ", thumbnail: "thumbnails/3.webp", videoUrl: "https://drive.google.com/file/d/1IsFA_YRibu4nf1FiwF9WteRbQnGKpOYp/preview" },
     { id: 4, title: "Chhota Bheem and Hatim: The Legend of the First Jinn", thumbnail: "thumbnails/4.webp", videoUrl: "https://drive.google.com/file/d/1uPGJ8IvtDOtWhwraJzpQHcAjUlHQITJT/preview" },
-
-  { id: 5, title: "Frozen (2013)", thumbnail: "thumbnails/5.webp", videoUrl: "https://drive.google.com/file/d/1g9t3xn15hy4C-tLpblZCEQRcW520LrbP/preview" },
+    { id: 5, title: "Frozen (2013)", thumbnail: "thumbnails/5.webp", videoUrl: "https://drive.google.com/file/d/1g9t3xn15hy4C-tLpblZCEQRcW520LrbP/preview" },
 ];
 
 let currentPage = 1;
@@ -126,81 +125,96 @@ function initIndexPage() {
 }
 
 // ==========================================
-// 3. PLAYER PAGE LOGIC (Iframe Compatible)
+// 3. PLAYER PAGE LOGIC (Modified Button Interface)
 // ==========================================
 function initPlayerPage() {
-    const videoPlayer = document.getElementById('video-player');
     const playerMovieTitle = document.getElementById('player-movie-title');
+    const watchOnlineBtn = document.getElementById('watch-online-btn');
+    const downloadBtn = document.getElementById('download-btn');
 
     const urlParams = new URLSearchParams(window.location.search);
     const movieId = parseInt(urlParams.get('id'));
     const movie = moviesList.find(m => m.id === movieId);
 
-    if (movie && videoPlayer && playerMovieTitle) {
-        videoPlayer.src = movie.videoUrl;
+    if (movie && playerMovieTitle) {
         playerMovieTitle.textContent = movie.title;
         document.title = `${movie.title} - StreamVerse`;
-        // Setup fullscreen button and wrapper behavior for better mobile experience
-        const wrapper = document.querySelector('.video-wrapper');
-        const fsBtn = document.getElementById('enter-fullscreen-btn');
 
-        if (fsBtn && wrapper) {
-            fsBtn.addEventListener('click', async () => {
-                try {
-                    if (document.fullscreenElement) {
-                        await document.exitFullscreen();
-                    } else {
-                        await wrapper.requestFullscreen();
-                    }
-                } catch (err) {
-                    console.error('Fullscreen request failed', err);
-                }
-            });
-
-            // Mirror fullscreen state with a class to apply styles
-            document.addEventListener('fullscreenchange', () => {
-                const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
-                wrapper.classList.toggle('fullscreen', isFs);
+        // Watch Online: Direct video link opening
+        if (watchOnlineBtn) {
+            watchOnlineBtn.addEventListener('click', () => {
+                window.location.href = movie.videoUrl;
             });
         }
-    } else if (playerMovieTitle && videoPlayer) {
+
+        // Download: Open high CTR blog validation page passing ID
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => {
+                window.location.href = `download.html?id=${movie.id}`;
+            });
+        }
+    } else if (playerMovieTitle) {
         playerMovieTitle.textContent = "Movie Not Found";
-        videoPlayer.style.display = "none";
+        if (watchOnlineBtn) watchOnlineBtn.style.display = "none";
+        if (downloadBtn) downloadBtn.style.display = "none";
     }
 }
-
 // ==========================================
-// 4. AUTOMATIC LANDSCAPE ON FULLSCREEN
+// 4. DOWNLOAD PAGE VERIFICATION LOGIC (No Auto Scroll + Direct Download Fixed)
 // ==========================================
-function handleFullscreenOrientation() {
-    const isFullscreen = document.fullscreenElement ||
-        document.webkitFullscreenElement ||
-        document.mozFullScreenElement ||
-        document.msFullscreenElement;
+function initDownloadPage() {
+    const verifyBtn = document.getElementById('verify-btn');
+    const verifyStatus = document.getElementById('verify-status');
+    const continueSection = document.getElementById('continue-section');
+    const continueBtn = document.getElementById('continue-btn');
 
-    if (isFullscreen) {
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch((err) => {
-                console.log("Orientation lock not supported: ", err);
-            });
-        }
-    } else {
-        if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-        }
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = parseInt(urlParams.get('id'));
+    const movie = moviesList.find(m => m.id === movieId);
+
+    if (verifyBtn && continueSection) {
+        verifyBtn.addEventListener('click', () => {
+            // Sirf message show hoga aur section unhide hoga, NO AUTO SCROLL
+            verifyStatus.classList.remove('hidden');
+            continueSection.classList.remove('hidden');
+            verifyBtn.disabled = true;
+            verifyBtn.className = "w-full bg-gray-700 text-gray-500 font-bold py-3 px-6 rounded-lg cursor-not-allowed text-xs uppercase tracking-wider";
+            verifyBtn.textContent = "✓ Step 1 Verified";
+        });
+    }
+
+    if (continueBtn) {
+        continueBtn.addEventListener('click', () => {
+            if (movie) {
+                // 1. Adsterra Smart Link trigger in a new tab
+                window.open("https://www.effectivecpmnetwork.com/py2ju5iaqk?key=979de599020b73280b4660ccab7e249f", "_blank");
+                
+                // 2. Google drive preview link ko direct download link mein transform karne ki logic
+                let origUrl = movie.videoUrl;
+                let downloadUrl = origUrl;
+
+                if (origUrl.includes('drive.google.com')) {
+                    // Extracting the File ID from link structure
+                    let fileId = "";
+                    const matches = origUrl.match(/\/d\/([a-zA-Z0-9_-]+)\//);
+                    if (matches && matches[1]) {
+                        fileId = matches[1];
+                    } else {
+                        const fileIdParam = new URLSearchParams(new URL(origUrl).search).get('id');
+                        if (fileIdParam) fileId = fileIdParam;
+                    }
+
+                    if (fileId) {
+                        // Force download URL mapping instead of web player stream
+                        downloadUrl = `https://docs.google.com/uc?export=download&id=${fileId}`;
+                    }
+                }
+                
+                // Redirection execution for download bypass
+                window.location.href = downloadUrl;
+            } else {
+                alert("Download link error. Please go back to homepage.");
+            }
+        });
     }
 }
-
-// Global Event Listeners for Fullscreen Changes
-document.addEventListener('fullscreenchange', handleFullscreenOrientation);
-document.addEventListener('webkitfullscreenchange', handleFullscreenOrientation);
-document.addEventListener('mozfullscreenchange', handleFullscreenOrientation);
-document.addEventListener('MSFullscreenChange', handleFullscreenOrientation);
-
-window.addEventListener('blur', () => {
-    setTimeout(() => {
-        if (document.fullscreenElement || document.webkitFullscreenElement) {
-            handleFullscreenOrientation();
-        }
-    }, 400);
-});
