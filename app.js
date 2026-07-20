@@ -2,7 +2,6 @@
 // 1. MOVIE DATA LIST
 // ==========================================
 const moviesList = [
-
     { id: 1, title: "Chhota Bheem Aur Krishna", thumbnail: "thumbnails/1.webp", videoUrl: "https://drive.google.com/file/d/1-G0WxhERhkCbZhciWmrrmiSDDXJSZdht/preview" },
     { id: 2, title: "Chhota Bheem & Krishna In Patliputra City Of Dead ", thumbnail: "thumbnails/2.webp", videoUrl: "https://drive.google.com/file/d/1vBya42znalQuwvPdjaaj8xwtyiDm-g7p/preview" },
     { id: 3, title: "Chhota Bheem And Krishna In Mayanagari ", thumbnail: "thumbnails/3.webp", videoUrl: "https://drive.google.com/file/d/1IsFA_YRibu4nf1FiwF9WteRbQnGKpOYp/preview" },
@@ -37,11 +36,11 @@ function initIndexPage() {
             moviesGrid.innerHTML = `
                 <div class="col-span-full text-center py-12 px-4 bg-gray-850 rounded-xl border border-gray-800 space-y-4">
                     <p class="text-gray-400 text-base">The movie you are looking for is currently unreleased or buffering.</p>
-                    <a href="https://www.effectivecpmnetwork.com/py2ju5iaqk?key=979de599020b73280b4660ccab7e249f" 
+                    <a href="https://www.effectivecpmnetwork.com/fnidem1r8?key=e811a9ad862800948e70aaf5bc5c225f" 
                        target="_blank" 
                        rel="noopener noreferrer" 
                        class="inline-block bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition transform hover:scale-105 text-sm">
-                        ⚡ Click Here to Request & Stream from Cloud Server
+                       ⚡ Click Here to Request & Stream from Cloud Server
                     </a>
                 </div>
             `;
@@ -159,6 +158,7 @@ function initPlayerPage() {
         if (downloadBtn) downloadBtn.style.display = "none";
     }
 }
+
 // ==========================================
 // 4. DOWNLOAD PAGE VERIFICATION LOGIC (No Auto Scroll + Direct Download Fixed)
 // ==========================================
@@ -187,7 +187,7 @@ function initDownloadPage() {
         continueBtn.addEventListener('click', () => {
             if (movie) {
                 // 1. Adsterra Smart Link trigger in a new tab
-                window.open("https://www.effectivecpmnetwork.com/py2ju5iaqk?key=979de599020b73280b4660ccab7e249f", "_blank");
+                window.open("https://www.effectivecpmnetwork.com/fnidem1r8?key=e811a9ad862800948e70aaf5bc5c225f", "_blank");
                 
                 // 2. Google drive preview link ko direct download link mein transform karne ki logic
                 let origUrl = movie.videoUrl;
